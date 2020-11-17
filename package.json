@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "scripts": {
+    "build": "babel src -d lib",
+    "build:watch": "babel --watch src -d lib"
+  },
+  "dependencies": {
+    "fbjs": "^3.0.0",
+    "react": "^17.0.1",
+    "react-reconciler": "^0.26.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/plugin-transform-react-jsx": "^7.12.5"
+  }
+}
