@@ -1,17 +1,22 @@
-import Reconciler from 'react-reconciler';
+import Reconciler from "react-reconciler";
+
+const log = (...args) => {
+  // console.log(...args);
+};
 
 const FunnyRenderer = Reconciler({
   createInstance(type, props) {
-    console.log("createInstance", { type, props })
+    log("createInstance", { type, props });
     return {
       type,
       props,
-    }
+      children: [],
+    };
   },
-  prepareForCommit() { },
-  getRootHostContext(rootInstance) { },
-  resetAfterCommit() { },
-  getChildHostContext() { },
+  prepareForCommit() {},
+  getRootHostContext(rootInstance) {},
+  resetAfterCommit() {},
+  getChildHostContext() {},
   shouldSetTextContent(type, props) {
     return false;
   },
@@ -19,34 +24,39 @@ const FunnyRenderer = Reconciler({
     return text;
   },
   appendInitialChild: (parent, child) => {
-    parent.child = child;
-    console.log("appendInitialChild", { parent, child })
+    parent.children.push(child);
+    log("appendInitialChild", { parent, child });
   },
   appendChild(parent, child) {
-    parent.child = child;
-    console.log("appendChild", { parent, child })
+    parent.children.push(child);
+    log("appendChild", { parent, child });
   },
   finalizeInitialChildren(wordElement, type, props) {
     return false;
   },
-  appendChildToContainer: (...args) => { console.log("appendChildToContainer", args) },
-  clearContainer: () => { },
-  supportsMutation: true
+  appendChildToContainer: (container, child) => {
+    if (!container.children) {
+      container.children = [];
+    }
+    container.children.push(child);
+    log("appendChildToContainer", { container, child });
+  },
+  clearContainer: () => {},
+  supportsMutation: true,
 });
 
 const RendererPublicAPI = {
   render(element, container, callback) {
-    console.log({ element, container, callback })
+    log({ element, container, callback });
     // Call MyRenderer.updateContainer() to schedule changes on the roots.
     // See ReactDOM, React Native, or React ART for practical examples.
 
     if (!container.__rootContainer) {
-      console.log('creating container')
+      log("creating container");
       container.__rootContainer = FunnyRenderer.createContainer(container, false);
-
     }
     FunnyRenderer.updateContainer(element, container.__rootContainer);
-  }
+  },
 };
 
 export default RendererPublicAPI;
